@@ -2,7 +2,7 @@
 #ansy playbook start with three dash
 -
 ###this minus in yaml indicate a list of items. the play contains a list of play
-  hosts: ansible-client1
+  hosts: node1
   tasks:
     - name: install openjdk-11 in ubuntu
       apt:
@@ -14,3 +14,35 @@
       get_url:
         url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.22/bin/apache-tomcat-10.0.22.tar.gz
         dest: /opt
+    - name: unpack the downloaded tomcat tar file
+      ansible.builtin.unarchive:
+        src: /opt/apache-tomcat-10.0.22.tar.gz
+        dest: /opt/tomcat
+        remote_src: yes
+    - name: Add the user 'tomcat' with a specific uid and a primary group of 'tomcat'
+      ansible.builtin.user:
+        name: tomcat
+        comment: John Doe
+        group: tomcat
+    - name: Change file ownership, group and permissions
+      ansible.builtin.file:
+        path: /opt/tomcat
+        owner: tomcat
+        group: tomcat
+     - name: Change file ownership, group and permissions
+        ansible.builtin.file:
+        path: /opt/tomcat/bin
+        owner: tomcat
+        group: tomcat
+        mode: 777
+      - name: add the maven environment variable
+        lineinfile:
+          path: /opt/tomcat/conf/tomcat-users.xml
+          state: present
+          line: "{{ item }}"
+        with_items:
+        - '<role rolename="manager-gui" />'
+        - '<user username="manager" password="_SECRET_PASSWORD_" roles="manager-gui" />'
+        - '<role rolename="admin-gui" />'
+        - '<role rolename="admin-gui" />'
+      
