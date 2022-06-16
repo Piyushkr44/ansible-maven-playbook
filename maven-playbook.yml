@@ -2,8 +2,7 @@
 #ansy playbook start with three dash
 -
 ###this minus in yaml indicate a list of items. the play contains a list of play
-  hosts: ansible-client,ansible-client1
-  vars:
+  hosts: ansible-client, ansible-client1
     motd_redhat: "welcome to redhat linux\n"
     motd_ubuntu: "welcome to ubuntu linux \n"
 
