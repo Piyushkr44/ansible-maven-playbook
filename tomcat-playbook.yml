@@ -2,7 +2,7 @@
 #ansy playbook start with three dash
 -
 ###this minus in yaml indicate a list of items. the play contains a list of play
-  hosts: node1
+  hosts: all
   tasks:
     - name: install openjdk-11 in ubuntu
       apt:
@@ -34,15 +34,5 @@
         path: /opt/tomcat/bin
         owner: tomcat
         group: tomcat
-        mode: 777
-    - name: add the maven environment variable
-      lineinfile:
-        path: /opt/tomcat/conf/tomcat-users.xml
-        state: present
-        line: "{{ item }}"
-      with_items:
-        - '<role rolename="manager-gui" />'
-        - '<user username="manager" password="_SECRET_PASSWORD_" roles="manager-gui" />'
-        - '<role rolename="admin-gui" />'
-        - '<role rolename="admin-gui" />'
-      
+        mode: '777'
+    
