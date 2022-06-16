@@ -2,7 +2,7 @@
 #ansy playbook start with three dash
 -
 ###this minus in yaml indicate a list of items. the play contains a list of play
-  hosts: ansible-client,ansible-client1
+  hosts: ansible-client1,ansible-client
   vars:
     motd_redhat: "welcome to redhat linux\n"
     motd_ubuntu: "welcome to ubuntu linux \n"
@@ -51,6 +51,17 @@
       with_items:
         - 'export M2_HOME=/opt/maven'
         - 'export PATH=${M2_HOME}/bin:${PATH}'
+
+    - name: reload the profile 
+      shell: "source /etc/profile.d/maven.sh && echo $variable_in_profile"
+
+    - name: print maven version
+      shell: mvn --version #java --version
+      register: system_maven
+
+    - name: display maven version 
+      debug:
+        msg: "{{ system_maven }}"
 
 
 
