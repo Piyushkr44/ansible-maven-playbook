@@ -1,0 +1,11 @@
+---
+-
+hosts: ansible-client,ansible-client1
+
+tasks:
+  - name: install java
+    package: 
+      name: java-11-openjdk
+      state: present
+    #state can be present latest or absent
+
