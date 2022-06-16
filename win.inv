@@ -1,5 +1,5 @@
 [winhost]
-10.0.0.7
+20.121.51.17
 [winhost:vars]
 ansible_user_name=piyush1607kr
 ansible_user_password=Iloveindia@123
