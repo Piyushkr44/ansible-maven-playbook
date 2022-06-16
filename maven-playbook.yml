@@ -31,19 +31,19 @@
         dest: /opt/
         remote_src: yes
 
-    -name: create a symbolic link
+    - name: create a symbolic link
      file: 
         src: /opt/apache-maven-3.8.6
         dest: /opt/maven 
         state: link
 
-    -name: create maven.sh file
+    - name: create maven.sh file
       ansible.builtin.file:
         path: /etc/profile.d/maven.sh
         state: touch 
         mode: 777
     
-    -name: add the maven environment variable
+    - name: add the maven environment variable
       lineinfile:
         path: /etc/profile.d/maven.sh
         state: present
