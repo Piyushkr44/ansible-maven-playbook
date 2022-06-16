@@ -1,11 +1,16 @@
 ---
+#ansy playbook start with three dash
 -
-hosts: ansible-client,ansible-client1
+###this minus in yaml indicate a list of items. the play contains a list of play
+  hosts: ansible-client,ansible-client1
+  vars:
+    motd_redhat: "welcome to redhat linux\n"
+    motd_ubuntu: "welcome to ubuntu linux \n"
 
-tasks:
-  - name: install java
-    package: 
-      name: java-11-openjdk
-      state: present
-    #state can be present latest or absent
+  tasks:
+    - name: install java
+      package: 
+        name: java-11-openjdk
+        state: present 
+        #state can be present latest or absent
 
