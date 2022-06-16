@@ -1,0 +1,16 @@
+---
+#ansy playbook start with three dash
+-
+###this minus in yaml indicate a list of items. the play contains a list of play
+  hosts: ansible-client1
+  tasks:
+    - name: install openjdk-11 in ubuntu
+      apt:
+        name: openjdk-11-jdk-headless
+        update_cache: true
+        state: present 
+      when: ansible_distribution == "Ubuntu"
+    - name: Download tomcat file from a file path
+      get_url:
+        url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.22/bin/apache-tomcat-10.0.22.tar.gz
+        dest: /opt
