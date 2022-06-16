@@ -62,6 +62,20 @@
     - name: display maven version 
       debug:
         msg: "{{ system_maven }}"
+    
+    - name: check storage
+      shell: "free -h"
+      register: storage
+    - name: diplay the storage
+      debug: 
+        msg: "{{ storage }}"
+    - name: check maven.sh file exist or not
+      stat:
+        path: /etc/profile.d/maven.sh
+      register: st
+    - name: diplay the file exist
+      debug: 
+        msg: this file exist "{{ st }}"
 
 
 
