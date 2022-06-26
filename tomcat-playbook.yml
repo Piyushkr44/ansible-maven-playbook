@@ -2,37 +2,56 @@
 #ansy playbook start with three dash
 -
 ###this minus in yaml indicate a list of items. the play contains a list of play
-  hosts: node1
+  hosts: client1
+  vars:
+    tomcat_download_url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.64/bin/apache-tomcat-9.0.64.tar.gz
+    tomcat_download_location: /usr/share/tomcat/apache-tomcat-9.0.64.tar.gz
+  
   tasks:
-    - name: install openjdk-11 in ubuntu
+    - name: install java 
       apt:
-        name: openjdk-11-jdk-headless
-        update_cache: true
+        name: openjdk-13-jre-headless
         state: present 
-      when: ansible_distribution == "Ubuntu"
-    - name: Download tomcat file from a file path
-      get_url:
-        url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.22/bin/apache-tomcat-10.0.22.tar.gz
-        dest: /opt
-    - name: unpack the downloaded tomcat tar file
-      ansible.builtin.unarchive:
-        src: /opt/apache-tomcat-10.0.22.tar.gz
-        dest: /opt/tomcat
-        remote_src: yes
-    - name: Add the user 'tomcat' with a specific uid and a primary group of 'tomcat'
-      ansible.builtin.user:
+    - name: add group tomcat
+      group:
         name: tomcat
-        comment: John Doe
+        state: present 
+    - name: add user tomcat 
+      user:
+        name: tomcat
         group: tomcat
-    - name: Change file ownership, group and permissions
-      ansible.builtin.file:
-        path: /opt/tomcat
-        owner: tomcat
-        group: tomcat
-    - name: Change file ownership, group and permissions
-      ansible.builtin.file:
-        path: /opt/tomcat/bin
-        owner: tomcat
-        group: tomcat
-        mode: '777'
+        home: /usr/share/tomcat createhome=no
+    #download the tomcat package
+    - name: create a tomcat directory 
+      file: 
+        path: /usr/share/tomcat 
+        state: directory
+        owner: tomcat 
+        group: tomcat 
+    - name: Download tomcat 
+      get_url: 
+        url: "{{tomcat_download_url}}"
+        dest: "{{tomcat_download_location}}"
     
+    #extract the tomcat archive
+    - name: extract tomcat 
+      unarchive:
+        src: "{{tomcat_download_location}}"
+        dest: /usr/share/tomcat 
+        owner: tomcat 
+        group: tomcat 
+        remote_src: yes 
+        extra_opts: [--strip-components=1]
+        creates: /usr/share/tomcat/bin 
+    - name: copy tomcat service 
+      template:
+        src: templates/tomcat.service.j2
+        dest: /etc/systemd/system/tomcat.service
+      when: ansible_service_mgr == 'systemd'
+    - name: start and enable tomcat_
+      service:
+        daemon_reload: yes
+        name: tomcat 
+        state: started 
+        enabled: yes
+      when: ansible_service_mgr == 'systemd'
